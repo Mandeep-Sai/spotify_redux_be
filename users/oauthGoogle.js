@@ -10,7 +10,7 @@ const authenticate = async (user) => {
       { id: user._id },
       process.env.SECRET_KEY,
       {
-        expiresIn: "15m",
+        expiresIn: "1 hour",
       }
     );
 
