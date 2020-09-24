@@ -6,32 +6,54 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
-router.get("/me", async (req, res) => {
-  const token = req.cookies.accessToken;
-  const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-  if (decoded) {
-    const user = await userModel.findById(decoded.id);
-    res.send(user);
-  }
-});
-
 router.post("/register", async (req, res) => {
   try {
     const checkEmail = await userModel.find({ email: req.body.email });
-    console.log(checkEmail);
     if (checkEmail.length !== 0) {
       res.status(409).send("user with same email exists");
     } else {
       const plainPassword = req.body.password;
       req.body.password = await bcrypt.hash(plainPassword, 8);
-      console.log(req.body);
       const newUser = new userModel(req.body);
       await newUser.save();
-      res.send("registered Successfully");
+      const token = await jwt.sign(
+        { id: newUser._id },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "1 hour",
+        }
+      );
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: false,
+      });
+      res.send(newUser);
     }
   } catch (error) {
     //next(error);
     res.send(error.errors);
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const user = await userModel.findOne({
+    $or: [{ username: req.body.username }, { email: req.body.username }],
+  });
+  const isAuthorized = await bcrypt.compare(req.body.password, user.password);
+  if (isAuthorized) {
+    const token = await jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1 hour",
+    });
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: false,
+    });
+
+    res.send(user);
+  } else {
+    res.status(409).send("Invalid Credentials");
   }
 });
 
