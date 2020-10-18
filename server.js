@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config();
 
-const whitelist = ["http://localhost:3000","https://spotifybe.herokuapp.com"];
+const whitelist = ["http://localhost:3000","https://spotifyfe.herokuapp.com"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
