@@ -28,7 +28,7 @@ passport.use(
       clientID:
         "661623475170-07r1tnns5ku8jqc4ht1eri95nl4796eh.apps.googleusercontent.com",
       clientSecret: "GmXIoMDX2dzBQWnyUmOIpA9F",
-      callbackURL: "http://localhost:3003/users/googleRedirect",
+      callbackURL: "https://spotifybe.herokuapp.com/users/googleRedirect",
       passReqToCallback: true,
     },
 

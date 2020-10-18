@@ -9,6 +9,6 @@ const userSchema = new Schema({
   listOfLikedSongs: Array,
 });
 
-const userModel = model("user", userSchema);
+const userModel = model("spotifyuser", userSchema);
 
 module.exports = userModel;

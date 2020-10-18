@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config();
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["http://localhost:3000","https://spotifybe.herokuapp.com"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -31,7 +31,7 @@ server.use(express.json());
 
 server.use("/users", userRoutes);
 mongoose
-  .connect("mongodb://localhost:27017/spotify", {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
